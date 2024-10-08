@@ -37,7 +37,7 @@ class ChiTietDonHangController extends Controller
             }
             return response()->json([
                 'status' => true,
-                'message' => "Sản phẩm đã được thêm vào giỏ hàng thành công!"
+                'message' => "Tour đã được thêm vào giỏ hàng thành công!"
             ]);
         } else {
             return response()->json([
@@ -67,7 +67,7 @@ class ChiTietDonHangController extends Controller
             if (count($request->ds_mua_sp) < 1) {
                 return response()->json([
                     'status' => false,
-                    'message' => "Bạn dã chọn sản phẩm nào đâu mà mua"
+                    'message' => "Bạn dã chọn Tour nào đâu mà Book"
                 ]);
             } else {
                 foreach ($request->ds_mua_sp as $key => $value) {
@@ -99,7 +99,7 @@ class ChiTietDonHangController extends Controller
             $giohang->delete();
             return response()->json([
                 'status' => true,
-                'message' => "Sản phẩm đã được xóa khỏi vào giỏ hàng thành công!"
+                'message' => "Tour này đã được xóa khỏi vào giỏ hàng thành công!"
             ]);
         } else {
             return response()->json([

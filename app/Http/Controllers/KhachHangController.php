@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\KichHoatTaiKhoan;
 use App\Models\KhachHang;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class KhachHangController extends Controller
@@ -14,12 +16,14 @@ class KhachHangController extends Controller
     public function dangky(Request $request)
     {
         try {
-            KhachHang::create([
+            $tai_khoan = KhachHang::create([
                 'ho_va_ten'     => $request->ho_va_ten,
                 'email'         => $request->email,
                 'so_dien_thoai' => $request->so_dien_thoai,
                 'password'      => bcrypt($request->password),
+                'hash_active'       => Str::uuid(),
             ]);
+            Mail::to($request->email)->send(new KichHoatTaiKhoan($tai_khoan->hash_active, $request->ho_va_ten));
             return response()->json([
                 'status'     => true,
                 'message'   => "Đăng Ký Tài Khoản Thành Công!"
@@ -70,7 +74,26 @@ class KhachHangController extends Controller
             ]);
         }
     }
+    public function kichHoatTaiKhoanMail($hash_active)
+    {
+        $tai_khoan = KhachHang::where('hash_active', $hash_active)->where('is_active', 0)->first();
 
+        if ($tai_khoan) {
+            $tai_khoan->is_active = 1;
+            $tai_khoan->hash_active = null;
+            $tai_khoan->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => "Bạn đã kích hoạt tài khoản thành công!"
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Tài khoản bạn đã được kích hoạt hoặc không tồn tại!"
+            ]);
+        }
+    }
     public function dangNhap(Request $request)
     {
         $check = Auth::guard('khach_hang')->attempt([
@@ -155,6 +178,54 @@ class KhachHangController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => "Vui lòng đăng nhập"
+            ]);
+        }
+    }
+
+    public function thongTin()
+    {
+        $khach_hang = Auth::guard('sanctum')->user();
+        return response()->json([
+            'data' => $khach_hang
+        ]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $khach_hang = KhachHang::where('id', $request->id)->first();
+        if ($khach_hang) {
+            $khach_hang->update([
+                'email'             => $request->email,
+                'so_dien_thoai'     => $request->so_dien_thoai,
+                'ho_va_ten'         => $request->ho_va_ten,
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => "Đã đổi trạng thái tài khoản thành công!"
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Có lỗi xảy ra!"
+            ]);
+        }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $khach_hang = Auth::guard('sanctum')->user();
+        if ($khach_hang) {
+            KhachHang::where('id', $khach_hang->id)->update([
+                'password' => bcrypt($request->password),
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => "Đã đổi mật khẩu tài khoản thành công!"
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Có lỗi xảy ra!"
             ]);
         }
     }

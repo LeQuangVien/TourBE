@@ -21,6 +21,10 @@ class DiaDiem extends Model
         'slot',
         'ticket',
         'ngay_khoi_hanh',
+        'hinh_anh_2',
+        'description_1',
+        'description_2',
+        'description_3',
     ];
     protected $casts = [
         'created_at' => 'datetime:d/m/Y', // Change your format

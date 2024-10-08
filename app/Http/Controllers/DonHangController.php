@@ -24,7 +24,7 @@ class DonHangController extends Controller
         } else if (count($request->ds_mua_sp) < 1) {
             return response()->json([
                 'status' => false,
-                'message' => "Bạn dã chọn sản phẩm nào đâu mà mua"
+                'message' => "Bạn dã chọn Tour nào đâu mà Book"
             ]);
         } else {
             $don_hang = DonHang::create([
@@ -54,8 +54,17 @@ class DonHangController extends Controller
             $dia_chi->delete();
             return response()->json([
                 'status' => true,
-                'message' => "Đặt đơn hàng thành công"
+                'message' => "Book Tour thành công"
             ]);
         }
+    }
+
+    public function donHangProfile(Request $request)
+    {
+        $khach_hang = Auth::guard('sanctum')->user();
+        $donhang = DonHang::where('id_khach_hang', $khach_hang->id)->get();
+        return response()->json([
+            'data'      => $donhang
+        ]);
     }
 }

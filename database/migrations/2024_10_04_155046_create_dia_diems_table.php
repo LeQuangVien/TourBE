@@ -24,6 +24,11 @@ return new class extends Migration
             $table->integer('slot');
             $table->string('ticket');
             $table->date('ngay_khoi_hanh')->format('d/m/Y');
+            $table->string('hinh_anh_2');
+            $table->string('description_1')->nullable();
+            $table->string('description_2')->nullable();
+            $table->string('description_3')->nullable();
+
             $table->timestamps();
         });
     }

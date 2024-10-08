@@ -17,11 +17,18 @@ Route::get('trang-chu/chi-tiet-dia-diem/select/{id}', [DiaDiemController::class,
 Route::post('/khach-hang/dang-ky', [KhachHangController::class, 'dangky']);
 Route::post('/khach-hang/kich-hoat-tai-khoan', [KhachHangController::class, 'kichHoatTaiKhoan']);
 
+Route::get('/kich-hoat-tai-khoan/{id}',                 [KhachHangController::class, 'kichHoatTaiKhoanMail']); // Mail
+
+
 Route::post('/khach-hang/dang-nhap', [KhachHangController::class, 'dangNhap']);
 Route::post('/khach-hang/check-login', [KhachHangController::class, 'checkloginUser']);
 Route::get('/khach-hang/dang-xuat',                     [KhachHangController::class, 'dangxuat']);
 Route::get('/khach-hang/dang-xuat-tat-ca-thiet-bi',     [KhachHangController::class, 'dangXuatTatCaThietBi']);
 Route::post('/khach-hang/check-email',                  [KhachHangController::class, 'checkEmail']);
+//profile
+Route::get('/khach-hang/thong-tin',                     [KhachHangController::class, 'thongTin']);
+Route::post('/khach-hang/updateProfile',                [KhachHangController::class, 'updateProfile']);
+Route::post('/khach-hang/updatePassword',               [KhachHangController::class, 'updatePassword']);
 
 // them vao gio hang
 Route::post('chi-tiet-don-hang/them-vao-gio-hang', [ChiTietDonHangController::class, 'themVaoGioHang']);
@@ -43,3 +50,6 @@ Route::post('/trang-chu/tim-kiem', [DiaDiemController::class, 'timKiemTrangChu']
 
 //contact
 Route::post('/contact/post', [ConTactController::class, 'create']);
+
+//Đơn Hàng
+Route::get('/profile/thong-tin-don-hang', [DonHangController::class, 'donHangProfile']);
